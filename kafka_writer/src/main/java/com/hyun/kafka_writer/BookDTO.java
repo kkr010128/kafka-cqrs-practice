@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class BookDTO {
+    private Long bid;
     private String title;
     private String author;
     private String category;

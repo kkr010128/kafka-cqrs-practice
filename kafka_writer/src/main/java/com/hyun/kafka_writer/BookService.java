@@ -11,6 +11,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
+    private final KafkaProducer kafkaProducer;
 
     public void saveBook(BookDTO bookDTO) {
         try {
@@ -27,6 +28,9 @@ public class BookService {
                     .description(bookDTO.getDescription())
                     .build();
             bookRepository.save(book);
+            bookDTO.setBid(book.getBid());
+            // 쓰기 작업을 완료할 때 카프카에게 메시지를 전송
+            kafkaProducer.sendMessage(bookDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
